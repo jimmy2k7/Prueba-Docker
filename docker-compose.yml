@@ -1,0 +1,45 @@
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: securepassword
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql:/docker-entrypoint-initdb.d  # Carpeta donde puedes añadir scripts SQL para MySQL
+    networks:
+      - app-network
+
+  php:
+    image: php:8.0-apache
+    container_name: php_container
+    restart: always
+    ports:
+      - "8080:80"
+    volumes:
+      - ./php:/var/www/html
+    networks:
+      - app-network
+
+  apache:
+    image: httpd:2.4
+    container_name: apache_container
+    restart: always
+    ports:
+      - "8081:81"
+    volumes:
+      - ./html:/usr/local/apache2/htdocs/  # Mapeamos la carpeta 'html' de tu host al directorio del servidor web Apache
+    depends_on:
+      - php
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

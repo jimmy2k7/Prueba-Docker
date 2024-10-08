@@ -1,0 +1,6 @@
+CREATE DATABASE IF NOT EXISTS test_db;
+CREATE TABLE IF NOT EXISTS test_db.users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+INSERT INTO test_db.users (name) VALUES ('User1'), ('User2');
